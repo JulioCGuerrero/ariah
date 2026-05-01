@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ariah — Estructura de Ingeniería</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #000000;
+    --white: #ffffff;
+    --gray-900: #0a0a0a;
+    --gray-800: #111111;
+    --gray-700: #1a1a1a;
+    --gray-600: #222222;
+    --gray-400: #555555;
+    --gray-300: #888888;
+    --gray-100: #cccccc;
+    --accent: #ffffff;
+    --accent-dim: rgba(255,255,255,0.08);
+    --accent-border: rgba(255,255,255,0.15);
+    --accent-border-hover: rgba(255,255,255,0.5);
+    --temp: rgba(255,255,255,0.35);
+  }
+
+  html, body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 48px;
+    border-bottom: 1px solid var(--accent-border);
+    position: sticky;
+    top: 0;
+    background: rgba(0,0,0,0.92);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+  }
+  .logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .logo-wrap img {
+    height: 44px;
+    width: 44px;
+    object-fit: contain;
+    filter: brightness(1);
+  }
+  .logo-label {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.35em;
+    color: var(--gray-300);
+    text-transform: uppercase;
+  }
+  .header-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--gray-400);
+    letter-spacing: 0.15em;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 64px 48px 48px;
+    border-bottom: 1px solid var(--accent-border);
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    font-family: 'Space Mono', monospace;
+  }
+  .hero-title {
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  .hero-title span {
+    color: var(--gray-400);
+  }
+  .hero-desc {
+    font-size: 16px;
+    color: var(--gray-300);
+    font-weight: 400;
+    max-width: 520px;
+    line-height: 1.6;
+  }
+
+  /* CHART AREA */
+  .chart-area {
+    padding: 64px 48px;
+  }
+
+  /* TREE */
+  .tree {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* ORIGIN ROW */
+  .origin-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 0;
+    align-items: flex-end;
+  }
+  .origin-card {
+    padding: 14px 24px;
+    border: 1px solid var(--accent-border);
+    background: var(--gray-900);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-300);
+    position: relative;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+  .origin-card .sub {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--gray-400);
+    margin-top: 2px;
+    letter-spacing: 0.05em;
+    text-transform: none;
+  }
+
+  /* CONNECTOR */
+  .connector {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, transparent, var(--accent-border));
+    margin: 0 auto;
+  }
+  .connector-h {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    position: relative;
+    height: 40px;
+  }
+  .connector-h::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: var(--span, 60%);
+    height: 1px;
+    background: var(--accent-border);
+  }
+
+  /* HEAD NODE */
+  .head-node {
+    border: 1px solid rgba(255,255,255,0.5);
+    background: var(--gray-900);
+    padding: 28px 48px;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    min-width: 380px;
+    clip-path: polygon(16px 0%, 100% 0%, calc(100% - 16px) 100%, 0% 100%);
+  }
+  .head-node:hover {
+    border-color: var(--white);
+    background: var(--gray-800);
+  }
+  .head-node .role-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--gray-400);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .head-node .name {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .head-node .desc {
+    font-size: 13px;
+    color: var(--gray-300);
+    margin-top: 6px;
+    font-weight: 400;
+  }
+  .head-node .badge-origin {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .origin-badge {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray-400);
+    border: 1px solid var(--gray-600);
+    padding: 3px 10px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* AREAS ROW */
+  .areas-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    justify-content: center;
+  }
+
+  /* AREA COLUMN */
+  .area-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* AREA NODE */
+  .area-node {
+    width: 160px;
+    border: 1px solid var(--accent-border);
+    background: var(--gray-900);
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.25s, background 0.25s, transform 0.25s;
+    position: relative;
+  }
+  .area-node:hover {
+    border-color: var(--white);
+    background: var(--gray-800);
+    transform: translateY(-2px);
+  }
+  .area-node.active {
+    border-color: var(--white);
+    background: var(--gray-700);
+  }
+  .area-node.temporal {
+    border-style: dashed;
+    border-color: var(--temp);
+    opacity: 0.7;
+  }
+  .area-node.temporal:hover {
+    border-color: rgba(255,255,255,0.5);
+    opacity: 1;
+  }
+  .area-node .area-icon {
+    font-size: 20px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .area-node .area-name {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+  .area-node .area-sub {
+    font-size: 11px;
+    color: var(--gray-300);
+    margin-top: 4px;
+    font-weight: 400;
+  }
+  .temp-badge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--black);
+    border: 1px dashed var(--temp);
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--gray-400);
+    padding: 2px 8px;
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+
+  /* ROLES */
+  .roles-wrap {
+    width: 160px;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .roles-wrap.open {
+    max-height: 300px;
+  }
+  .roles-inner {
+    border: 1px solid var(--accent-border);
+    border-top: none;
+    background: var(--gray-800);
+  }
+  .role-item {
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--gray-100);
+    border-bottom: 1px solid var(--gray-700);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+  }
+  .role-item:last-child { border-bottom: none; }
+  .role-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--gray-400);
+    flex-shrink: 0;
+  }
+  .role-item.sr .role-dot { background: var(--white); }
+
+  /* DETAIL PANEL */
+  .detail-panel {
+    margin-top: 48px;
+    border: 1px solid var(--accent-border);
+    background: var(--gray-900);
+    padding: 40px;
+    display: none;
+    animation: fadeIn 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .detail-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--white), transparent);
+    opacity: 0.4;
+  }
+  .detail-panel.visible { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
+  .panel-icon { font-size: 36px; margin-bottom: 8px; }
+  .panel-name {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .panel-tagline {
+    font-size: 14px;
+    color: var(--gray-300);
+    margin-top: 4px;
+  }
+  .close-btn {
+    background: none;
+    border: 1px solid var(--gray-600);
+    color: var(--gray-300);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    padding: 8px 16px;
+    cursor: pointer;
+    letter-spacing: 0.2em;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .close-btn:hover { border-color: var(--white); color: var(--white); }
+
+  .panel-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+  }
+  .panel-section h4 {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--gray-700);
+  }
+  .panel-section p {
+    font-size: 14px;
+    color: var(--gray-100);
+    line-height: 1.7;
+    font-weight: 400;
+  }
+  .panel-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .panel-list li {
+    font-size: 13px;
+    color: var(--gray-100);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .panel-list li::before {
+    content: '—';
+    color: var(--gray-400);
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+
+  .stack-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .stack-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    border: 1px solid var(--gray-600);
+    padding: 4px 10px;
+    color: var(--gray-300);
+    letter-spacing: 0.1em;
+  }
+
+  /* MIGRATION NOTICE */
+  .migration-notice {
+    margin-top: 48px;
+    border: 1px dashed rgba(255,255,255,0.2);
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .migration-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+  .migration-text h5 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gray-300);
+    margin-bottom: 4px;
+  }
+  .migration-text p {
+    font-size: 13px;
+    color: var(--gray-400);
+    line-height: 1.6;
+  }
+  .migration-arrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--gray-400);
+    letter-spacing: 0.2em;
+    white-space: nowrap;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--accent-border);
+    padding: 24px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  footer span {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--gray-400);
+    letter-spacing: 0.2em;
+  }
+
+  @media (max-width: 900px) {
+    header { padding: 16px 24px; }
+    .hero { padding: 40px 24px 32px; }
+    .chart-area { padding: 40px 24px; }
+    .areas-row { flex-wrap: wrap; gap: 8px; }
+    .panel-grid { grid-template-columns: 1fr; }
+    .head-node { min-width: 280px; clip-path: none; }
+    footer { padding: 16px 24px; flex-direction: column; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-wrap">
+    <img src="data:image/jpeg;base64,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" alt="Ariah Logo">
+    <div>
+      <div style="font-size:16px;font-weight:700;letter-spacing:0.2em;">ARIAH</div>
+      <div class="logo-label">Equipo de Desarrollo</div>
+    </div>
+  </div>
+  <div class="header-title">EQUIPO DE DESARROLLO · 2025</div>
+</header>
+
+<section class="hero">
+  <div class="hero-eyebrow">Propuesta de estructura</div>
+  <h1 class="hero-title">Equipo de<br><span>Desarrollo</span></h1>
+  <p class="hero-desc">Ariah nace de la unión de la Unidad de Inteligencia y el Área de Sistemas. Una estructura especializada, diseñada para escalar.</p>
+</section>
+
+<section class="chart-area">
+  <div class="tree">
+
+    <!-- HEAD -->
+    <div class="head-node" onclick="togglePanel('director')">
+      <div class="role-tag">Director</div>
+      <div class="name">Director de Ariah</div>
+      <div class="desc">Visión estratégica · Liderazgo técnico · Arquitectura · Mentoring</div>
+      <div class="badge-origin">
+        <span class="origin-badge">Unidad de Inteligencia</span>
+        <span class="origin-badge">+</span>
+        <span class="origin-badge">Área de Sistemas</span>
+      </div>
+    </div>
+
+    <div class="connector"></div>
+
+    <!-- AREAS -->
+    <div class="areas-row" id="areas-row">
+
+      <!-- FRONTEND -->
+      <div class="area-col">
+        <div class="area-node" id="node-frontend" onclick="toggleArea('frontend')">
+          <span class="area-icon">⬡</span>
+          <div class="area-name">Frontend</div>
+          <div class="area-sub">React · Vue · UX</div>
+        </div>
+        <div class="connector" style="height:0;background:none;"></div>
+        <div class="roles-wrap" id="roles-frontend">
+          <div class="roles-inner">
+            <div class="role-item sr"><span class="role-dot"></span>Desarrollador Sr</div>
+            <div class="role-item"><span class="role-dot"></span>Desarrollador Jr</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BACKEND -->
+      <div class="area-col">
+        <div class="area-node" id="node-backend" onclick="toggleArea('backend')">
+          <span class="area-icon">⬡</span>
+          <div class="area-name">Backend</div>
+          <div class="area-sub">APIs · Lógica · BD</div>
+        </div>
+        <div class="roles-wrap" id="roles-backend">
+          <div class="roles-inner">
+            <div class="role-item sr"><span class="role-dot"></span>Desarrollador Sr</div>
+            <div class="role-item"><span class="role-dot"></span>Desarrollador Jr</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QA -->
+      <div class="area-col">
+        <div class="area-node" id="node-qa" onclick="toggleArea('qa')">
+          <span class="area-icon">⬡</span>
+          <div class="area-name">QA</div>
+          <div class="area-sub">Testing · Calidad</div>
+        </div>
+        <div class="roles-wrap" id="roles-qa">
+          <div class="roles-inner">
+            <div class="role-item sr"><span class="role-dot"></span>QA Engineer</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DEVOPS -->
+      <div class="area-col">
+        <div class="area-node" id="node-devops" onclick="toggleArea('devops')">
+          <span class="area-icon">⬡</span>
+          <div class="area-name">DevOps<br>/ Infra</div>
+          <div class="area-sub">CI·CD · Cloud</div>
+        </div>
+        <div class="roles-wrap" id="roles-devops">
+          <div class="roles-inner">
+            <div class="role-item sr"><span class="role-dot"></span>DevOps Engineer</div>
+            <div class="role-item"><span class="role-dot"></span>Desarrollador Jr</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROBOTICA -->
+      <div class="area-col">
+        <div class="area-node" id="node-robotica" onclick="toggleArea('robotica')">
+          <span class="area-icon">⬡</span>
+          <div class="area-name">Robótica<br>e IoT</div>
+          <div class="area-sub">Robots · Sensores</div>
+        </div>
+        <div class="roles-wrap" id="roles-robotica">
+          <div class="roles-inner">
+            <div class="role-item sr"><span class="role-dot"></span>Robotics Engineer</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HEREDADOS -->
+      <div class="area-col">
+        <div class="area-node temporal" id="node-heredados" onclick="toggleArea('heredados')">
+          <div class="temp-badge">Temporal</div>
+          <span class="area-icon">⬡</span>
+          <div class="area-name">Proyectos<br>Heredados</div>
+          <div class="area-sub">Singa · Legacy</div>
+        </div>
+        <div class="roles-wrap" id="roles-heredados">
+          <div class="roles-inner">
+            <div class="role-item"><span class="role-dot"></span>Singa</div>
+            <div class="role-item"><span class="role-dot"></span>Otros sistemas</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DETAIL PANEL -->
+    <div class="detail-panel" id="detail-panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-icon" id="panel-icon"></div>
+          <div class="panel-name" id="panel-name"></div>
+          <div class="panel-tagline" id="panel-tagline"></div>
+        </div>
+        <button class="close-btn" onclick="closePanel()">✕ CERRAR</button>
+      </div>
+      <div class="panel-grid" id="panel-grid"></div>
+    </div>
+
+    <!-- MIGRATION NOTICE -->
+    <div class="migration-notice">
+      <div class="migration-icon">↻</div>
+      <div class="migration-text">
+        <h5>Migración gradual</h5>
+        <p>Los proyectos heredados de Sistemas (Singa y otros) se mantienen operativos y migran progresivamente a la tecnología de Ariah. La rama temporal desaparece conforme cada sistema es reemplazado.</p>
+      </div>
+      <div class="migration-arrow">SISTEMAS LEGACY → ARIAH STACK</div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <span>ARIAH · EQUIPO DE DESARROLLO · PROPUESTA 2025</span>
+  <span>CONFIDENCIAL</span>
+</footer>
+
+<script>
+const data = {
+  director: {
+    icon: '◈',
+    name: 'Director de Ariah',
+    tagline: 'Ariah — Liderazgo técnico y estratégico',
+    sections: [
+      {
+        title: 'Responsabilidades',
+        type: 'list',
+        items: [
+          'Definir la visión técnica de Ariah',
+          'Tomar decisiones de arquitectura',
+          'Gestionar y hacer crecer el equipo',
+          'Coordinar con stakeholders',
+          'Mentoring a los líderes de área',
+          'Supervisar la migración de sistemas heredados'
+        ]
+      },
+      {
+        title: 'Origen',
+        type: 'text',
+        content: 'Este rol consolida el liderazgo de la Unidad de Inteligencia —equipo que en año y medio superó al área de Sistemas existente— con la gestión técnica del área de Sistemas. Ariah es la evolución natural de ambos.'
+      },
+      {
+        title: 'Stack de gestión',
+        type: 'tags',
+        items: ['Roadmap', 'OKRs', 'Arquitectura', 'Code Review', 'Hiring', 'RFC']
+      }
+    ]
+  },
+  frontend: {
+    icon: '⬡',
+    name: 'Frontend',
+    tagline: 'Interfaces, experiencia de usuario y cliente web',
+    sections: [
+      {
+        title: 'Responsabilidades',
+        type: 'list',
+        items: [
+          'Desarrollo de interfaces de usuario',
+          'Experiencia y diseño de interacción',
+          'Integración con APIs del equipo de Backend',
+          'Performance y accesibilidad',
+          'Design system y componentes reutilizables'
+        ]
+      },
+      {
+        title: 'Equipo',
+        type: 'list',
+        items: ['Desarrollador Sr — lidera decisiones técnicas del área', 'Desarrollador Jr — construcción y mantenimiento de features']
+      },
+      {
+        title: 'Stack',
+        type: 'tags',
+        items: ['React', 'Vue', 'TypeScript', 'Tailwind', 'Figma', 'Vite']
+      }
+    ]
+  },
+  backend: {
+    icon: '⬡',
+    name: 'Backend',
+    tagline: 'APIs, lógica de negocio y bases de datos',
+    sections: [
+      {
+        title: 'Responsabilidades',
+        type: 'list',
+        items: [
+          'Diseño y desarrollo de APIs REST / GraphQL',
+          'Lógica de negocio y reglas del sistema',
+          'Modelado y gestión de bases de datos',
+          'Autenticación y seguridad',
+          'Integraciones con sistemas externos'
+        ]
+      },
+      {
+        title: 'Equipo',
+        type: 'list',
+        items: ['Desarrollador Sr — arquitectura y decisiones de datos', 'Desarrollador Jr — features y mantenimiento']
+      },
+      {
+        title: 'Stack',
+        type: 'tags',
+        items: ['Node.js', 'Python', 'PostgreSQL', 'Redis', 'REST', 'Docker']
+      }
+    ]
+  },
+  qa: {
+    icon: '⬡',
+    name: 'QA',
+    tagline: 'Calidad, testing y prevención de errores',
+    sections: [
+      {
+        title: 'Responsabilidades',
+        type: 'list',
+        items: [
+          'Diseño y ejecución de casos de prueba',
+          'Testing funcional, regresión e integración',
+          'Reporte y seguimiento de bugs',
+          'Validación antes de cada release',
+          'Proponer mejoras al proceso de calidad'
+        ]
+      },
+      {
+        title: 'Equipo',
+        type: 'text',
+        content: 'Un QA Engineer trabajando de forma transversal a todas las áreas. Al ser el único, prioriza testing crítico y automatización progresiva para ganar cobertura sin depender de escala.'
+      },
+      {
+        title: 'Stack',
+        type: 'tags',
+        items: ['Playwright', 'Jest', 'Postman', 'TestRail', 'Jira', 'CI Testing']
+      }
+    ]
+  },
+  devops: {
+    icon: '⬡',
+    name: 'DevOps / Infra',
+    tagline: 'Infraestructura, automatización y disponibilidad',
+    sections: [
+      {
+        title: 'Responsabilidades',
+        type: 'list',
+        items: [
+          'Diseño y gestión de infraestructura cloud',
+          'Pipelines de CI/CD',
+          'Monitoreo, alertas y disponibilidad',
+          'Seguridad de infraestructura',
+          'Gestión de redes y servidores',
+          'Soporte técnico de nivel avanzado'
+        ]
+      },
+      {
+        title: 'Equipo',
+        type: 'list',
+        items: ['DevOps Engineer Sr — lidera infra y arquitectura de despliegue', 'Desarrollador Jr — soporte, automatización y monitoreo']
+      },
+      {
+        title: 'Stack',
+        type: 'tags',
+        items: ['AWS / GCP', 'Docker', 'Kubernetes', 'Terraform', 'GitHub Actions', 'Grafana']
+      }
+    ]
+  },
+  robotica: {
+    icon: '⬡',
+    name: 'Robótica e IoT',
+    tagline: 'Automatización física, robots y dispositivos conectados',
+    sections: [
+      {
+        title: 'Responsabilidades',
+        type: 'list',
+        items: [
+          'Desarrollo y mantenimiento de robots',
+          'Integración de sensores y actuadores',
+          'Firmware y software embebido',
+          'Comunicación IoT y protocolos de red',
+          'Documentación técnica de hardware'
+        ]
+      },
+      {
+        title: 'Equipo',
+        type: 'text',
+        content: 'Un Robotics Engineer trabajando de forma autónoma. Al ser el único en el área, gestiona el ciclo completo: desde el hardware hasta la integración con los sistemas de software de Ariah.'
+      },
+      {
+        title: 'Stack',
+        type: 'tags',
+        items: ['ROS', 'Python', 'C/C++', 'MQTT', 'Raspberry Pi', 'Arduino']
+      }
+    ]
+  },
+  heredados: {
+    icon: '↻',
+    name: 'Proyectos Heredados',
+    tagline: 'Sistemas legacy de la antigua Área de Sistemas — en migración',
+    sections: [
+      {
+        title: 'Proyectos activos',
+        type: 'list',
+        items: ['Singa — sistema principal heredado', 'Otros proyectos de Sistemas', 'Integraciones legacy', 'Documentación en proceso']
+      },
+      {
+        title: 'Estrategia',
+        type: 'text',
+        content: 'Esta rama es temporal por diseño. Los sistemas se mantienen operativos mientras se migran gradualmente a la tecnología de Ariah. Cada migración completada reduce la deuda técnica y elimina una dependencia del legacy.'
+      },
+      {
+        title: 'Estado',
+        type: 'tags',
+        items: ['En mantenimiento', 'Migración gradual', 'Prioridad baja-media', 'Temporal']
+      }
+    ]
+  }
+};
+
+let activeArea = null;
+let activePanel = null;
+
+function toggleArea(id) {
+  const roles = document.getElementById('roles-' + id);
+  const node = document.getElementById('node-' + id);
+
+  if (activeArea && activeArea !== id) {
+    document.getElementById('roles-' + activeArea).classList.remove('open');
+    document.getElementById('node-' + activeArea).classList.remove('active');
+  }
+
+  if (activeArea === id) {
+    roles.classList.remove('open');
+    node.classList.remove('active');
+    activeArea = null;
+    showPanel(id);
+  } else {
+    roles.classList.add('open');
+    node.classList.add('active');
+    activeArea = id;
+    showPanel(id);
+  }
+}
+
+function togglePanel(id) {
+  if (activePanel === id) {
+    closePanel();
+  } else {
+    showPanel(id);
+  }
+}
+
+function showPanel(id) {
+  const d = data[id];
+  if (!d) return;
+
+  document.getElementById('panel-icon').textContent = d.icon;
+  document.getElementById('panel-name').textContent = d.name;
+  document.getElementById('panel-tagline').textContent = d.tagline;
+
+  let html = '';
+  d.sections.forEach(s => {
+    html += `<div class="panel-section"><h4>${s.title}</h4>`;
+    if (s.type === 'list') {
+      html += '<ul class="panel-list">';
+      s.items.forEach(i => html += `<li>${i}</li>`);
+      html += '</ul>';
+    } else if (s.type === 'text') {
+      html += `<p>${s.content}</p>`;
+    } else if (s.type === 'tags') {
+      html += '<div class="stack-tags">';
+      s.items.forEach(t => html += `<span class="stack-tag">${t}</span>`);
+      html += '</div>';
+    }
+    html += '</div>';
+  });
+
+  document.getElementById('panel-grid').innerHTML = html;
+
+  const panel = document.getElementById('detail-panel');
+  panel.classList.add('visible');
+  activePanel = id;
+
+  setTimeout(() => {
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 50);
+}
+
+function closePanel() {
+  document.getElementById('detail-panel').classList.remove('visible');
+  activePanel = null;
+  if (activeArea) {
+    document.getElementById('roles-' + activeArea).classList.remove('open');
+    document.getElementById('node-' + activeArea).classList.remove('active');
+    activeArea = null;
+  }
+}
+</script>
+</body>
+</html>
